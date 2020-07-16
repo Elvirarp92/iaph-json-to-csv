@@ -30,9 +30,14 @@ try:
                 data_row[field] = json_response[field]
             else:
                 data_row[field] = " "
+        for field in tipologia_fields:
+            if field in tipologia_list:
+                data_row[field] = tipologia_list[field]
+            else:
+                data_row[field] = " "
+
         writer.writerow(data_row)
-        data_row = {}
-        print(data_row)
+        print("Done!")
 
 except IOError:
     print("I/O error!")
