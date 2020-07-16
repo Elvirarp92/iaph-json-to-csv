@@ -11,7 +11,7 @@ unique_fields = ['id', 'codigo', 'municipio', 'provincia',
                  'denominacion', 'caracterizacion', 'proteccion_s']
 tipologia_fields = ['crono_fin', 'crono_ini',
                     'denom_acti', 'den_tipologia', 'periodos']
-
+header_fields = unique_fields + tipologia_fields
 csv_file_name = "File.csv"
 
 r = requests.get(route, headers=headers, verify=False)
@@ -23,7 +23,7 @@ data_row = {}
 try:
     csv_file_name = json_response["codigo"] + ".csv"
     with open(csv_file_name, 'x') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=unique_fields)
+        writer = csv.DictWriter(csvfile, fieldnames=header_fields)
         writer.writeheader()
         for field in unique_fields:
             if field in json_response:
