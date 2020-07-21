@@ -38,11 +38,11 @@ try:
                                  'municipio': json_response['municipio'], 'provincia': json_response['provincia'],
                                  'denominacion': json_response['denominacion'], 'caracterizacion': json_response['caracterizacion'],
                                  'proteccion_s': json_response['proteccion_s'],
-                                 'crono_fin': json_response['tipologiaList'][elm]['tipologia']['crono_fin'],
-                                 'crono_ini': json_response['tipologiaList'][elm]['tipologia']['crono_ini'],
-                                 'denom_acti': json_response['tipologiaList'][elm]['tipologia']['denom_acti'],
-                                 'den_tipologia': json_response['tipologiaList'][elm]['tipologia']['den_tipologia'],
-                                 'periodos': json_response['tipologiaList'][elm]['tipologia']['periodos']})
+                                 'crono_fin': json_response['tipologiaList']['tipologia'][elm]['crono_fin'],
+                                 'crono_ini': json_response['tipologiaList']['tipologia'][elm]['crono_ini'],
+                                 'denom_acti': json_response['tipologiaList']['tipologia'][elm]['denom_acti'],
+                                 'den_tipologia': json_response['tipologiaList']['tipologia'][elm]['den_tipologia'],
+                                 'periodos': json_response['tipologiaList']['tipologia'][elm]['periodos']})
         print("Done!")
 
 except IOError:
