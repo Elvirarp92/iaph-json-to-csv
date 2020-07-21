@@ -10,7 +10,6 @@ r = requests.get(route, headers=headers, verify=False)
 
 json_response = r.json()  # this is a dict
 
-csv_file_name = "File.csv"
 csv_headers = ['id', 'codigo', 'municipio', 'provincia',
                'denominacion', 'caracterizacion', 'proteccion_s',
                'crono_fin', 'crono_ini',
