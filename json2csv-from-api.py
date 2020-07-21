@@ -1,42 +1,48 @@
 import requests
 import csv
 
-
 token = '648d70da-a1d2-3e97-b858-f61aa38c64f6'
-id = 1
+id = 23525  # Casa de Pilatos
 route = 'https://guiadigital.iaph.es/api/1.0/bien/inmueble/' + str(id)
 headers = {'Authorization': 'Bearer ' + token}
-
-unique_fields = ['id', 'codigo', 'municipio', 'provincia',
-                 'denominacion', 'caracterizacion', 'proteccion_s']
-tipologia_fields = ['crono_fin', 'crono_ini',
-                    'denom_acti', 'den_tipologia', 'periodos']
-header_fields = unique_fields + tipologia_fields
-csv_file_name = "File.csv"
 
 r = requests.get(route, headers=headers, verify=False)
 
 json_response = r.json()  # this is a dict
-tipologia_list = json_response['tipologiaList']['tipologia']
-data_row = {}
+
+csv_file_name = "File.csv"
+csv_headers = ['id', 'codigo', 'municipio', 'provincia',
+               'denominacion', 'caracterizacion', 'proteccion_s',
+               'crono_fin', 'crono_ini',
+               'denom_acti', 'den_tipologia', 'periodos']
+csv_fields = {'id': json_response['id'], 'codigo': json_response['codigo'],
+              'municipio': json_response['municipio'], 'provincia': json_response['provincia'],
+              'denominacion': json_response['denominacion'], 'caracterizacion': json_response['caracterizacion'],
+              'proteccion_s': json_response['proteccion_s'],
+              'crono_fin': json_response['tipologiaList']['tipologia']['crono_fin'],
+              'crono_ini': json_response['tipologiaList']['tipologia']['crono_ini'],
+              'denom_acti': json_response['tipologiaList']['tipologia']['denom_acti'],
+              'den_tipologia': json_response['tipologiaList']['tipologia']['den_tipologia'],
+              'periodos': json_response['tipologiaList']['tipologia']['periodos']}
 
 try:
     csv_file_name = json_response["codigo"] + ".csv"
     with open(csv_file_name, 'x') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=header_fields)
+        writer = csv.DictWriter(csvfile, fieldnames=csv_headers)
         writer.writeheader()
-        for field in unique_fields:
-            if field in json_response:
-                data_row[field] = json_response[field]
-            else:
-                data_row[field] = " "
-        for field in tipologia_fields:
-            if field in tipologia_list:
-                data_row[field] = tipologia_list[field]
-            else:
-                data_row[field] = " "
-
-        writer.writerow(data_row)
+        if isinstance(json_response["tipologiaList"]["tipologia"], dict):
+            writer.writerow(csv_fields)
+        elif isinstance(json_response["tipologiaList"]["tipologia"], list):
+            for elm in json_response["tipologiaList"]["tipologia"]:
+                writer.writerow({'id': json_response['id'], 'codigo': json_response['codigo'],
+                                 'municipio': json_response['municipio'], 'provincia': json_response['provincia'],
+                                 'denominacion': json_response['denominacion'], 'caracterizacion': json_response['caracterizacion'],
+                                 'proteccion_s': json_response['proteccion_s'],
+                                 'crono_fin': json_response['tipologiaList'][elm]['tipologia']['crono_fin'],
+                                 'crono_ini': json_response['tipologiaList'][elm]['tipologia']['crono_ini'],
+                                 'denom_acti': json_response['tipologiaList'][elm]['tipologia']['denom_acti'],
+                                 'den_tipologia': json_response['tipologiaList'][elm]['tipologia']['den_tipologia'],
+                                 'periodos': json_response['tipologiaList'][elm]['tipologia']['periodos']})
         print("Done!")
 
 except IOError:
