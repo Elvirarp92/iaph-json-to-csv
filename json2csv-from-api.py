@@ -15,15 +15,6 @@ csv_headers = ['id', 'codigo', 'municipio', 'provincia',
                'denominacion', 'caracterizacion', 'proteccion_s',
                'crono_fin', 'crono_ini',
                'denom_acti', 'den_tipologia', 'periodos']
-csv_fields = {'id': json_response['id'], 'codigo': json_response['codigo'],
-              'municipio': json_response['municipio'], 'provincia': json_response['provincia'],
-              'denominacion': json_response['denominacion'], 'caracterizacion': json_response['caracterizacion'],
-              'proteccion_s': json_response['proteccion_s'],
-              'crono_fin': json_response['tipologiaList']['tipologia']['crono_fin'],
-              'crono_ini': json_response['tipologiaList']['tipologia']['crono_ini'],
-              'denom_acti': json_response['tipologiaList']['tipologia']['denom_acti'],
-              'den_tipologia': json_response['tipologiaList']['tipologia']['den_tipologia'],
-              'periodos': json_response['tipologiaList']['tipologia']['periodos']}
 
 try:
     csv_file_name = json_response["codigo"] + ".csv"
@@ -31,18 +22,26 @@ try:
         writer = csv.DictWriter(csvfile, fieldnames=csv_headers)
         writer.writeheader()
         if isinstance(json_response["tipologiaList"]["tipologia"], dict):
-            writer.writerow(csv_fields)
+            writer.writerow({'id': json_response['id'], 'codigo': json_response['codigo'],
+                             'municipio': json_response['municipio'], 'provincia': json_response['provincia'],
+                             'denominacion': json_response['denominacion'], 'caracterizacion': json_response['caracterizacion'],
+                             'proteccion_s': json_response['proteccion_s'],
+                             'crono_fin': json_response['tipologiaList']['tipologia']['crono_fin'],
+                             'crono_ini': json_response['tipologiaList']['tipologia']['crono_ini'],
+                             'denom_acti': json_response['tipologiaList']['tipologia']['denom_acti'],
+                             'den_tipologia': json_response['tipologiaList']['tipologia']['den_tipologia'],
+                             'periodos': json_response['tipologiaList']['tipologia']['periodos']})
         elif isinstance(json_response["tipologiaList"]["tipologia"], list):
-            for elm in json_response["tipologiaList"]["tipologia"]:
+            for idx, elm in enumerate(json_response["tipologiaList"]["tipologia"]):
                 writer.writerow({'id': json_response['id'], 'codigo': json_response['codigo'],
                                  'municipio': json_response['municipio'], 'provincia': json_response['provincia'],
                                  'denominacion': json_response['denominacion'], 'caracterizacion': json_response['caracterizacion'],
                                  'proteccion_s': json_response['proteccion_s'],
-                                 'crono_fin': json_response['tipologiaList']['tipologia'][elm]['crono_fin'],
-                                 'crono_ini': json_response['tipologiaList']['tipologia'][elm]['crono_ini'],
-                                 'denom_acti': json_response['tipologiaList']['tipologia'][elm]['denom_acti'],
-                                 'den_tipologia': json_response['tipologiaList']['tipologia'][elm]['den_tipologia'],
-                                 'periodos': json_response['tipologiaList']['tipologia'][elm]['periodos']})
+                                 'crono_fin': json_response['tipologiaList']['tipologia'][idx]['crono_fin'],
+                                 'crono_ini': json_response['tipologiaList']['tipologia'][idx]['crono_ini'],
+                                 'denom_acti': json_response['tipologiaList']['tipologia'][idx]['denom_acti'],
+                                 'den_tipologia': json_response['tipologiaList']['tipologia'][idx]['den_tipologia'],
+                                 'periodos': json_response['tipologiaList']['tipologia'][idx]['periodos']})
         print("Done!")
 
 except IOError:
