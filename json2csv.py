@@ -3,16 +3,12 @@ import csv
 import os
 import sys
 
-files = ["./json/ficha-inmueble-23525.jsonld"]
-
 csv_headers = ['id', 'codigo', 'municipio', 'provincia',
                'denominacion', 'caracterizacion', 'proteccion_s',
                'crono_fin', 'crono_ini',
                'denom_acti', 'den_tipologia', 'periodos']
 
 json_pathnames = sys.argv
-
-print(json_pathnames)
 
 for pathname in json_pathnames[1:]:
     json_directory = os.path.abspath(pathname)
