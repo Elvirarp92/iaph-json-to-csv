@@ -16,5 +16,5 @@ This script takes JSON files from a local folder, referenced as an argument.
 
 ## 🙏 Acknowledgements
 
-* [https://github.com/olea]Ismael Olea — original idea, spec
-* [https://github.com/jesmg/]Jesús Marín — advice and troubleshooting
+* [https://github.com/olea](Ismael Olea — original idea, spec(
+* [https://github.com/jesmg/](Jesús Marín — advice and troubleshooting)
