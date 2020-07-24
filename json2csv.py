@@ -10,6 +10,10 @@ csv_headers = ['id', 'codigo', 'municipio', 'provincia',
 
 json_pathnames = sys.argv
 
+#counters
+success_counter = 0
+key_error_counter = 0
+
 for pathname in json_pathnames[1:]:
     json_directory = os.path.abspath(pathname)
     for file in os.listdir(json_directory):
@@ -43,8 +47,13 @@ for pathname in json_pathnames[1:]:
                                                  'denom_acti': data['tipologiaList']['tipologia'][idx]['denom_acti'],
                                                  'den_tipologia': data['tipologiaList']['tipologia'][idx]['den_tipologia'],
                                                  'periodos': data['tipologiaList']['tipologia'][idx]['periodos']})
-                print("Done!")
+                        success_counter += 1
             except IOError:
                 print("I/O error!")
+            except KeyError:
+                key_error_counter +=1
+                continue
         else:
             continue
+
+print(f"Done! {success_counter} JSON files processed successfully, {key_error_counter} presented key errors.")
