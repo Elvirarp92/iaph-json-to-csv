@@ -11,7 +11,11 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
           'municipio', 'provincia', 'caracterizacion', 
           'crono_ini', 'crono_fin', 
           'denom_acti', 'den_tipologia', 'periodos', 'den_estilo',
-          'proteccion_s', "latitud_s", "longitud_s"]
+          'proteccion_s', 
+          "latitud_s", "longitud_s", 
+          "prot_pagina", "prot_fecha", "prot_estado", "prot_numero", "prot_figura", 
+          "prot_den_publica", "prot_tipologia",
+          "partede_tipo", "partede_codigo", "partede_denominacion"]
     writer = csv.DictWriter(IAPH_import_file, fieldnames=csv_headers)
     writer.writeheader()
 
@@ -82,6 +86,56 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
         except:
           tipologiaList = ""
 
+        try:
+          proteccionList = []        
+          if isinstance(data["proteccionList"]["proteccion"], dict):
+            proteccionList.append([ 
+                data['proteccionList']['proteccion']['pagina'],
+                data['proteccionList']['proteccion']['fecha'], 
+                data['proteccionList']['proteccion']['estado'],
+                data['proteccionList']['proteccion']['numero'],
+                data['proteccionList']['proteccion']['figura'],
+                data['proteccionList']['proteccion']['den_publica'],
+                data['proteccionList']['proteccion']['tipologia']
+            ]) 
+          elif isinstance(data["proteccionList"]["proteccion"], list):
+            for idx, elm in enumerate(data["proteccionList"]["proteccion"]):
+              proteccionList.append([ 
+                data['proteccionList']['proteccion'][idx]['pagina'],
+                data['proteccionList']['proteccion'][idx]['fecha'], 
+                data['proteccionList']['proteccion'][idx]['estado'],
+                data['proteccionList']['proteccion'][idx]['numero'],
+                data['proteccionList']['proteccion'][idx]['figura'],
+                data['proteccionList']['proteccion'][idx]['den_publica'],
+                data['proteccionList']['proteccion'][idx]['tipologia']
+              ])
+        except:
+          proteccionList = ""
+
+        try:
+          codigoList = []        
+          if isinstance(data["codigoList"]["codigo"], dict):
+            codigoList.append([ 
+                data['codigoList']['codigo']['tipo'],
+                data['codigoList']['codigo']['codigo'], 
+                data['codigoList']['codigo']['denominacion']
+            ]) 
+          elif isinstance(data["codigoList"]["codigo"], list):
+            for idx, elm in enumerate(data["codigoList"]["codigo"]):
+              codigoList.append([ 
+                data['codigoList']['codigo'][idx]['tipo'],
+                data['codigoList']['codigo'][idx]['codigo'], 
+                data['codigoList']['codigo'][idx]['denominacion']
+              ])
+        except:
+          codigoList = ""
+
+
+        for idx in range(len(denominacionList)): 
+          writer.writerow({
+            "otros_nombres": denominacionList[idx],
+          })
+
         writer.writerow({
           'id': registro_csv["id"],
           "codigo": registro_csv["codigo"],
@@ -95,6 +149,13 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
           "longitud_s": registro_csv["longitud_s"]
           })
 
+        for value in codigoList: 
+          writer.writerow({
+            "partede_tipo": value[0],
+            "partede_codigo": value[1],
+            "partede_denominacion": value[2]
+          })
+
         for value in tipologiaList: 
           writer.writerow({
             "crono_ini": value[0],
@@ -105,10 +166,17 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
             "den_estilo": value[5]
           })
 
-        for idx in range(len(denominacionList)): 
+        for value in proteccionList: 
           writer.writerow({
-            "otros_nombres": denominacionList[idx],
+            "prot_pagina": value[0],
+            "prot_fecha": value[1],
+            "prot_estado": value[2],
+            "prot_numero": value[3],
+            "prot_figura": value[4],
+            "prot_den_publica": value[5],
+            "prot_tipologia": value[6]
           })
+
 
         f.close()
         print(files.pop(0), "procesado.")
