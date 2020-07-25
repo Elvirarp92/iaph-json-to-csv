@@ -11,7 +11,7 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
           'municipio', 'provincia', 'caracterizacion', 
           'crono_ini', 'crono_fin', 
           'denom_acti', 'den_tipologia', 'periodos', 'den_estilo',
-          'proteccion_s']
+          'proteccion_s', "latitud_s", "longitud_s"]
     writer = csv.DictWriter(IAPH_import_file, fieldnames=csv_headers)
     writer.writeheader()
 
@@ -40,17 +40,23 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
         else:
           registro_csv["caracterizacion"] = ""
         registro_csv["proteccion_s"] = data['proteccion_s']
+        if "latitud_s" in data:
+          registro_csv["latitud_s"] = data["latitud_s"]
+        else:
+          registro_csv["latitud_s"] = ""
+        if "longitud_s" in data:
+          registro_csv["longitud_s"] = data["longitud_s"]
+        else:
+          registro_csv["longitud_s"] = ""          
+    
+
 
         try:
-          if isinstance(data['denominacionList'], dict):
-            registro_csv['otros_nombres'] = data['denominacionList']['denominacion']
-          elif  isinstance(data['denominacionList'], list):
-            for idx, elm in enumerate(data["denominacionList"]):
-              registro_csv['otros_nombres'] = data['denominacionList'][idx]['denominacion']
+          denominacionList = []
+          for x in data['denominacionList']['denominacion']:
+            denominacionList.append(x["denominacion"])
         except:
-          registro_csv['otros_nombres'] = ""
-
-        print("Otros nombres: ",registro_csv['otros_nombres'])  
+          denominacionList =""
 
         tipologiaList = []        
         if isinstance(data["tipologiaList"]["tipologia"], dict):
@@ -77,18 +83,13 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
           'id': registro_csv["id"],
           "codigo": registro_csv["codigo"],
           "denominacion": registro_csv["denominacion"],
-          "otros_nombres": registro_csv['otros_nombres'],
           "tipo": registro_csv["tipo"],
           "municipio": registro_csv["municipio"],
           "provincia": registro_csv["provincia"],
           "caracterizacion": registro_csv["caracterizacion"],
-          "crono_ini": tipologiaList[0][0],
-          "crono_fin": tipologiaList[0][1],
-          "denom_acti": tipologiaList[0][2],
-          "den_tipologia": tipologiaList[0][3],
-          "periodos": tipologiaList[0][4],
-          "den_estilo": tipologiaList[0][5],
-          "proteccion_s": registro_csv["proteccion_s"]
+          "proteccion_s": registro_csv["proteccion_s"],
+          "latitud_s":  registro_csv["latitud_s"],
+          "longitud_s": registro_csv["longitud_s"]
           })
 
         for value in tipologiaList: 
@@ -97,7 +98,13 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
             "crono_fin": value[1],
             "denom_acti": value[2],
             "den_tipologia": value[3],
-            "den_estilo": value[4]
+            "periodos": value[4],
+            "den_estilo": value[5]
+          })
+
+        for idx in range(len(denominacionList)): 
+          writer.writerow({
+            "otros_nombres": denominacionList[idx],
           })
 
         f.close()
