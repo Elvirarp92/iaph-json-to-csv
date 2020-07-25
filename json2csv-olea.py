@@ -58,26 +58,29 @@ with open('IAPH_import.csv', mode='w') as IAPH_import_file:
         except:
           denominacionList =""
 
-        tipologiaList = []        
-        if isinstance(data["tipologiaList"]["tipologia"], dict):
-          tipologiaList.append([ 
-              data['tipologiaList']['tipologia']['crono_ini'],
-              data['tipologiaList']['tipologia']['crono_fin'], 
-              data['tipologiaList']['tipologia']['denom_acti'],
-              data['tipologiaList']['tipologia']['den_tipologia'],
-              data['tipologiaList']['tipologia']['periodos'],
-              data['tipologiaList']['tipologia']['den_estilo']
-          ]) 
-        elif isinstance(data["tipologiaList"]["tipologia"], list):
-          for idx, elm in enumerate(data["tipologiaList"]["tipologia"]):
+        try:
+          tipologiaList = []        
+          if isinstance(data["tipologiaList"]["tipologia"], dict):
             tipologiaList.append([ 
-              data['tipologiaList']['tipologia'][idx]['crono_ini'],
-              data['tipologiaList']['tipologia'][idx]['crono_fin'], 
-              data['tipologiaList']['tipologia'][idx]['denom_acti'],
-              data['tipologiaList']['tipologia'][idx]['den_tipologia'],
-              data['tipologiaList']['tipologia'][idx]['periodos'],
-              data['tipologiaList']['tipologia'][idx]['den_estilo']
-            ])
+                data['tipologiaList']['tipologia']['crono_ini'],
+                data['tipologiaList']['tipologia']['crono_fin'], 
+                data['tipologiaList']['tipologia']['denom_acti'],
+                data['tipologiaList']['tipologia']['den_tipologia'],
+                data['tipologiaList']['tipologia']['periodos'],
+                data['tipologiaList']['tipologia']['den_estilo']
+            ]) 
+          elif isinstance(data["tipologiaList"]["tipologia"], list):
+            for idx, elm in enumerate(data["tipologiaList"]["tipologia"]):
+              tipologiaList.append([ 
+                data['tipologiaList']['tipologia'][idx]['crono_ini'],
+                data['tipologiaList']['tipologia'][idx]['crono_fin'], 
+                data['tipologiaList']['tipologia'][idx]['denom_acti'],
+                data['tipologiaList']['tipologia'][idx]['den_tipologia'],
+                data['tipologiaList']['tipologia'][idx]['periodos'],
+                data['tipologiaList']['tipologia'][idx]['den_estilo']
+              ])
+        except:
+          tipologiaList = ""
 
         writer.writerow({
           'id': registro_csv["id"],
